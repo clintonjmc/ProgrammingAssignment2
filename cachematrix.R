@@ -1,7 +1,12 @@
-## Put comments here that give an overall description of what your
-## functions do
+## This pair of functions is used for either calculating the inverse of a matrix,
+## or retrieving the inverse from a cache if it has been calculated already
 
-## Write a short comment describing this function
+## The first function, makeCacheMatrix creates a special "vector", 
+## which is really a list containing a function to: 
+## set the value of the matrix
+## get the value of the matrix
+## set the value of the inverse
+## get the value of the inverse
 
 makeCacheMatrix <- function(x = matrix()) {
 
@@ -11,28 +16,33 @@ m <- NULL
                 m <<- NULL
         }
         get <- function() x
-        setmean <- function(mean) m <<- mean
-        getmean <- function() m
+        setinv <- function(solve) m <<- solve
+        getinv <- function() m
         list(set = set, get = get,
-             setmean = setmean,
-             getmean = getmean)
+             setinv = setinv,
+             getinv = getinv)
 
 
 }
 
 
-## Write a short comment describing this function
+## The following function calculates the inverse of the matrix created within 
+## the vector in the above function. 
+## However, it first checks to see if the inverse has already been calculated. 
+## If so, it gets the inverse from the cache and skips the computation. 
+## Otherwise, it calculates the inverse of the data and sets the value of the 
+## inverse in the cache via the setinv function.
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-        m <- x$getmean()
+        m <- x$getinv()
         if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
         data <- x$get()
-        m <- mean(data, ...)
-        x$setmean(m)
+        m <- solve(data, ...)
+        x$setinv(m)
         m
 
 }
